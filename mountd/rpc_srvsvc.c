@@ -58,9 +58,7 @@ static int __share_entry_size_ctr1(struct ksmbd_dcerpc *dce, gpointer entry)
 	int sz = 0;
 
 	sz = strlen(share->name) * 2;
-	if (share->comment)
-		sz += strlen(share->comment) * 2;
-
+	sz += strlen(share->comment) * 2;
 	sz += 9 * sizeof(__u32);
 	return sz;
 }
@@ -93,22 +91,17 @@ static int __share_entry_rep_ctr1(struct ksmbd_dcerpc *dce, gpointer entry)
 static int __share_entry_data_ctr0(struct ksmbd_dcerpc *dce, gpointer entry)
 {
 	struct ksmbd_share *share = entry;
-	size_t len;
 
-	len = strlen(share->name) + 1;
-	return ndr_write_vstring(dce, share->name, len, len);
+	return ndr_write_vstring(dce, share->name);
 }
 
 static int __share_entry_data_ctr1(struct ksmbd_dcerpc *dce, gpointer entry)
 {
 	struct ksmbd_share *share = entry;
 	int ret;
-	size_t len;
 
-	len = strlen(share->name) + 1;
-	ret = ndr_write_vstring(dce, share->name, len, len);
-	len = strlen(share->comment) + 1;
-	ret |= ndr_write_vstring(dce, share->comment, len, len);
+	ret = ndr_write_vstring(dce, share->name);
+	ret |= ndr_write_vstring(dce, share->comment);
 	return ret;
 }
 
